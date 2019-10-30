@@ -1,15 +1,29 @@
+# EzPlatformDatabaseSchemaMigrationBundle
+
+This bundle comes with several commands to export, import and drop database table(s) using schema files during or after site development. It allows you also to add data to your tables
+
+Basically, you can use `DoctrineMigrationsBundle` or `KaliopMigrationBundle` to achieve database migration but this bundle uses the `doctrine-dbal-schema` bundle(used only during eZ Platform installation) and coming with ezplatform v2.5. It uses the same concept and classes to migrate custom schema either using `mysql` or `postgresql` databases.  
+
+## Requirement
+
+eZPlatform 2.5+ (Open Source or EE), PHP 7+
+
 ## Installation
 
-
-Activate the bundle in AppKernel.php
+```
+composer require arfaram/ezdatabasemigrationschema:^0.1
+```
+- Activate the Bundle in AppKernel.php
 
 ```
-new EzPlatform\DatabaseSchemaMigrationBundle\EzPlatformDatabaseSchemaMigrationBundle(),
+    public function registerBundles()
+    {
+        $bundles = array(
+            new EzPlatform\DatabaseSchemaMigrationBundle\EzPlatformDatabaseSchemaMigrationBundle(),
+        );
 ```
 
 ## Commands
-
-This bundle comes with several commands to export, import and drop database table(s) using schema files during site development. It allows you also to add data to your tables
 
 ### Export Schema
 
@@ -19,7 +33,7 @@ php bin/console db_schema_migration:schema:export
 
 Parameters:
 
-- `-t, --table[=TABLE]` : Table name to export. This will create an export file using the same table name and current timestamp e.g `ezcobj_state_1572446173.yaml`
+- `-t, --table[=TABLE]` : The table name to be exported. It will create an export file using the same table name and current timestamp e.g `ezcobj_state_1572446173.yaml`
 - `all`: (default) If you don't specify explicitly the table name then it will export the entire db schema in `db_schema_<timestamp>>.yaml`
 
 Note: You can specify the export folder path in `parameters.yml` otherwise it will create the dump files in your installation root folder:
@@ -38,7 +52,7 @@ Note: Using eZPlatform Cloud you should mount the export path folder in `.platfo
 php bin/console db_schema_migration:schema:import
 ```
 
-This command import schema to database.You should define your schema and add the file path in `parameters.yml`
+This command imports custom schema definition and you have to add the schema file path in `parameters.yml`
 
 Example:
 
@@ -47,7 +61,7 @@ parameters:
     database_schema_migration.schema.file.path: '%kernel.root_dir%/../<Schema-file-path>'
 ```
 
-You can find a schema file example in `bundle/doc/schema.yml` or the legacy ezplatform [schema.yaml](https://github.com/ezsystems/ezpublish-kernel/blob/master/eZ/Bundle/EzPublishCoreBundle/Resources/config/storage/legacy/schema.yaml)
+You can find a schema example in `bundle/doc/schema.yml` or the legacy ezplatform [schema.yaml](https://github.com/ezsystems/ezpublish-kernel/blob/master/eZ/Bundle/EzPublishCoreBundle/Resources/config/storage/legacy/schema.yaml)
 
 ### Import Data
 
@@ -57,7 +71,7 @@ Sometimes you want also to import data to an existing database table. This is al
 php bin/console db_schema_migration:data:import
 ```
 
-You should also add your sql file path in `parameters.yml`
+You have to add your sql file path in `parameters.yml`
 
 Example:
 
@@ -66,7 +80,7 @@ parameters:
     database_schema_migration.import.data.file.path: '%kernel.root_dir%/../<mysql-or-postgresql-file-path>'
 ```
 
-You can find an sql file example in `bundle/doc/mysql/data.sql` or check more [mysql](https://github.com/ezsystems/ezpublish-kernel/blob/master/data/mysql/cleandata.sql) or [postgresql](https://github.com/ezsystems/ezpublish-kernel/blob/master/data/postgresql/cleandata.sql) clean data example.
+You can find an sql file example in `bundle/doc/mysql/data.sql` or just check more ezplatform [mysql](https://github.com/ezsystems/ezpublish-kernel/blob/master/data/mysql/cleandata.sql) or [postgresql](https://github.com/ezsystems/ezpublish-kernel/blob/master/data/postgresql/cleandata.sql) clean data installation example.
 
 ### Drop table(s) using schema file
 
@@ -74,7 +88,7 @@ You can find an sql file example in `bundle/doc/mysql/data.sql` or check more [m
 php bin/console db_schema_migration:schema:drop
 ```
 
-This command remove table(s) using schema file.You have to add the file path in `parameters.yml`
+This command removes table(s) using an existing schema file.You have to add the file path in `parameters.yml`
 
 Example:
 
@@ -97,9 +111,9 @@ This command is using doctrine schema manager to drop db table.
 
 ### SchemaBuilder
 
-The `Installer.php` extend the `CoreInstaller` (used only during eZ Platform installation) but its constructor becomes a custom `SchemaBuilder`. It has the same structure like in `EzSystems\DoctrineSchema\Builder\SchemaBuilder` introduced the `doctrine-dbal-schema` bundle.
+The `Installer.php` class extends the `CoreInstaller` (used only during eZ Platform installation) but its constructor becomes a custom `SchemaBuilder`. It has the same structure like the `EzSystems\DoctrineSchema\Builder\SchemaBuilder` introduced in the `doctrine-dbal-schema` bundle.
 
-The EventsSubscriber `BuildSchemaSubscriber` class will load the schema file using the `importSchemaFromFile()`  method defined in the `SchemaBuilder`.
+The EventsSubscriber `BuildSchemaSubscriber` class will load the schema using the `importSchemaFromFile()`  method defined in the `SchemaBuilder`.
 
 You can also add a custom Subscriber which contains your custom schema. See the example in `services.yml`. 
 
