@@ -1,0 +1,35 @@
+parameters:
+    database_schema_migration.schema.file.path: ~
+    database_schema_migration.import.data.file.path: ~
+    database_schema_migration.export.schema.folder.path: ~
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    EzPlatform\DatabaseSchemaMigrationBundle\Command\:
+        resource: '../../Command/*'
+
+    EzPlatform\DatabaseSchemaMigrationBundle\Command\SchemaExporterCommand:
+        arguments:
+            - '%database_schema_migration.export.schema.folder.path%'
+
+    #create custom schema builder
+    EzPlatform\DatabaseSchemaMigration\Installer\Builder\SchemaBuilder: ~
+
+    EzPlatform\DatabaseSchemaMigration\Installer\Installer:
+        arguments:
+            - '@database_connection'
+            - '@EzPlatform\DatabaseSchemaMigration\Installer\Builder\SchemaBuilder'
+
+    EzPlatform\DatabaseSchemaMigration\Event\Subscriber\BuildSchemaSubscriber:
+        arguments:
+            - '%database_schema_migration.schema.file.path%'
+
+    #import data
+    EzPlatform\DatabaseSchemaMigration\Installer\Data\DbDataInstaller:
+        arguments:
+            - '@database_connection'
+            - '%database_schema_migration.import.data.file.path%'

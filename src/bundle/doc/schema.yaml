@@ -1,0 +1,9 @@
+tables:
+    ezroadshow2019:
+        id:
+            keyword_id: { type: integer, nullable: false, options: { default: '0' } }
+            locale: { type: string, nullable: false, length: 255, options: { default: '' } }
+        fields:
+            language_id: { type: integer, nullable: false, options: { default: '0' } }
+            keyword: { type: string, nullable: false, length: 255, options: { default: '' } }
+            status: { type: integer, nullable: false, options: { default: '0' } }

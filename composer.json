@@ -1,0 +1,27 @@
+{
+    "name": "arfaram/ezdatabasemigrationschema",
+    "type": "ezplatform-bundle",
+    "description": "This bundle gives you the possibility to import,export and drop database table(s) by extending the doctrine-dbal-schema bundle introduced in v2.5 ",
+    "keywords": [
+        "ezplatform",
+        "doctrine-dbal-schema"
+    ],
+    "homepage": "https://github.com/arfaram/ezdatabasemigrationschema",
+    "license": "GPL-2.0-only",
+    "authors": [
+        {
+            "name": "Ramzi Arfaoui",
+            "email": "ramzi_arfa@hotmail.de"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "EzPlatform\\MenuBundle\\": "src/bundle",
+            "EzPlatform\\Menu\\": "src/lib/Menu"
+        }
+    },
+    "require": {
+        "php": "^7.1",
+        "ezsystems/ezpublish-kernel": "^7.5"
+    }
+}
